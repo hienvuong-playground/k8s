@@ -50,17 +50,17 @@ resource "azurerm_role_assignment" "storage_blob_data_contributor" {
 resource "github_actions_variable" "client_id" {
   variable_name = "AZURE_CLIENT_ID"
   repository    = "k8s"
-  value         = "${azurerm_user_assigned_identity.main.client_id}"
+  value         = "170b3eb4-1652-46c9-9a73-d084603c7fbf"
 }
 
 resource "github_actions_variable" "tenant_id" {
   variable_name = "AZURE_TENANT_ID"
   repository    = "k8s"
-  value         = "${data.azurerm_client_config.current.tenant_id}"
+  value         = "5f431148-1e24-4600-af0b-cdaeeffa6045"
 }
 
 resource "github_actions_variable" "subscription_id" {
   variable_name = "AZURE_SUBSCRIPTION_ID"
   repository    = "k8s"
-  value         = "${data.azurerm_client_config.current.subscription_id}"
+  value         = "a5f932d9-c773-4a18-bba4-d37f82f974a3"
 }
