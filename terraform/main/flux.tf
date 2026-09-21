@@ -22,28 +22,29 @@ resource "azurerm_kubernetes_cluster_extension" "main" {
   extension_type = "microsoft.flux"
 }
 
-resource "tls_private_key" "infra" {
+resource "tls_private_key" "k8s" {
   algorithm = "ED25519"
 }
 
-resource "github_repository_deploy_key" "infra" {
-  title      = "flux-infra"
-  repository = "infra"
-  key        = tls_private_key.infra.public_key_openssh
+
+resource "github_repository_deploy_key" "k8s" {
+  title      = "flux-k8s"
+  repository = "k8s"
+  key        = tls_private_key.k8s.public_key_openssh
   read_only  = true
 }
 
-resource "azurerm_kubernetes_flux_configuration" "infra" {
+resource "azurerm_kubernetes_flux_configuration" "k8s" {
   name       = "flux-config"
   cluster_id = local.cluster_id
   namespace  = "flux-system"
   scope      = "cluster"
 
   git_repository {
-    url                    = "ssh://git@github.com/hienvuong-playground/infra"
+    url                    = "ssh://git@github.com/hienvuong-playground/k8s"
     reference_type         = "branch"
     reference_value        = "main"
-    ssh_private_key_base64 = base64encode(tls_private_key.infra.private_key_pem)
+    ssh_private_key_base64 = base64encode(tls_private_key.k8s.private_key_pem)
   }
 
   kustomizations {
