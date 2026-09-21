@@ -1,0 +1,41 @@
+name: Deploy Infra
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  deploy:
+    runs-on: ubuntu-24.04
+    defaults:
+      run:
+        working-directory: main
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: azure/login@v3
+        with:
+          client-id: ${{ vars.AZURE_CLIENT_ID }}
+          tenant-id: ${{ vars.AZURE_TENANT_ID }}
+          subscription-id: ${{ vars.AZURE_SUBSCRIPTION_ID }}
+
+      - uses: hashicorp/setup-terraform@v4
+        with:
+          terraform_version: 1.16.1
+
+      - name: Terraform Init
+        run: terraform init -reconfigure -upgrade
+
+      - name: Terraform Plan
+        env:
+          TF_VAR_github_app_pem: ${{ secrets.GH_APP_PEM }}
+        run: terraform plan -out=tfplan
+
+      - name: Terraform Apply
+        env:
+          TF_VAR_github_app_pem: ${{ secrets.GH_APP_PEM }}
+        run: terraform apply -auto-approve tfplan

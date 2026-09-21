@@ -32,7 +32,7 @@ resource "azurerm_federated_identity_credential" "k8s" {
   audience                  = ["api://AzureADTokenExchange"]
   issuer                    = "https://token.actions.githubusercontent.com"
   user_assigned_identity_id = azurerm_user_assigned_identity.main.id
-  subject                   = "repo:hienvuong-playground@325346053/infra@1378931138:ref:refs/heads/main"
+  subject                   = "repo:hienvuong-playground@325346053/k8s@1378931138:ref:refs/heads/main"
 }
 
 # resource "azurerm_role_assignment" "owner" {

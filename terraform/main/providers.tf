@@ -23,10 +23,13 @@ terraform {
   }
 
   backend "azurerm" {
+    use_oidc             = true
     use_azuread_auth     = true
-    storage_account_name = "stplaygroundk8sinit"
+    client_id            = "80c9c7ba-bc37-4fc6-b21e-2fb660764ae6"
+    storage_account_name = "stplaygroundinitk8s"
     key                  = "terraform.tfstate"
     container_name       = "tfstate"
+    tenant_id            = "05d0fb8b-e674-421f-81e0-eb7737ff8128"
   }
 }
 
@@ -44,52 +47,52 @@ provider "github" {
   }
 }
 
-provider "kubernetes" {
-  host                   = azurerm_kubernetes_cluster.main.kube_config[0].host
-  cluster_ca_certificate = base64decode(azurerm_kubernetes_cluster.main.kube_config[0].cluster_ca_certificate)
+# provider "kubernetes" {
+#   host                   = azurerm_kubernetes_cluster.main.kube_config[0].host
+#   cluster_ca_certificate = base64decode(azurerm_kubernetes_cluster.main.kube_config[0].cluster_ca_certificate)
 
-  exec {
-    api_version = "client.authentication.k8s.io/v1beta1"
-    command     = "kubelogin"
-    args = [
-      "get-token",
-      "--environment",
-      "AzurePublicCloud",
-      "--server-id",
-      "6dae42f8-4368-4678-94ff-3960e28e3630", # https://azure.github.io/kubelogin/concepts/aks.html
-      "--client-id",
-      data.azurerm_client_config.current.client_id,
-      "--tenant-id",
-      data.azurerm_client_config.current.tenant_id,
-      "--login",
-      "azurecli"
-    ]
-  }
-}
+#   exec {
+#     api_version = "client.authentication.k8s.io/v1beta1"
+#     command     = "kubelogin"
+#     args = [
+#       "get-token",
+#       "--environment",
+#       "AzurePublicCloud",
+#       "--server-id",
+#       "6dae42f8-4368-4678-94ff-3960e28e3630", # https://azure.github.io/kubelogin/concepts/aks.html
+#       "--client-id",
+#       data.azurerm_client_config.current.client_id,
+#       "--tenant-id",
+#       data.azurerm_client_config.current.tenant_id,
+#       "--login",
+#       "azurecli"
+#     ]
+#   }
+# }
 
-provider "helm" {
-  kubernetes = {
-    host                   = azurerm_kubernetes_cluster.main.kube_config[0].host
-    cluster_ca_certificate = base64decode(azurerm_kubernetes_cluster.main.kube_config[0].cluster_ca_certificate)
+# provider "helm" {
+#   kubernetes = {
+#     host                   = azurerm_kubernetes_cluster.main.kube_config[0].host
+#     cluster_ca_certificate = base64decode(azurerm_kubernetes_cluster.main.kube_config[0].cluster_ca_certificate)
 
-    exec = {
-      api_version = "client.authentication.k8s.io/v1beta1"
-      command     = "kubelogin"
-      args = [
-        "get-token",
-        "--environment",
-        "AzurePublicCloud",
-        "--server-id",
-        "6dae42f8-4368-4678-94ff-3960e28e3630", # https://azure.github.io/kubelogin/concepts/aks.html
-        "--client-id",
-        data.azurerm_client_config.current.client_id,
-        "--tenant-id",
-        data.azurerm_client_config.current.tenant_id,
-        "--login",
-        "azurecli"
-      ]
-    }
-  }
-}
+#     exec = {
+#       api_version = "client.authentication.k8s.io/v1beta1"
+#       command     = "kubelogin"
+#       args = [
+#         "get-token",
+#         "--environment",
+#         "AzurePublicCloud",
+#         "--server-id",
+#         "6dae42f8-4368-4678-94ff-3960e28e3630", # https://azure.github.io/kubelogin/concepts/aks.html
+#         "--client-id",
+#         data.azurerm_client_config.current.client_id,
+#         "--tenant-id",
+#         data.azurerm_client_config.current.tenant_id,
+#         "--login",
+#         "azurecli"
+#       ]
+#     }
+#   }
+# }
 
 data "azurerm_client_config" "current" {}

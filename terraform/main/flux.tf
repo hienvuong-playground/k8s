@@ -2,7 +2,12 @@ locals {
   # flux_namespace       = azurerm_kubernetes_flux_configuration.backend.namespace
   # backend_namespace    = kubernetes_namespace_v1.backend.metadata[0].name
   # service_account_name = kubernetes_service_account_v1.backend.metadata[0].name
-  cluster_id = "/subscriptions/a5f932d9-c773-4a18-bba4-d37f82f974a3/resourceGroups/rg-playground/providers/Microsoft.ContainerService/managedClusters/aks-playground"
+  # cluster_id = "/subscriptions/a5f932d9-c773-4a18-bba4-d37f82f974a3/resourceGroups/rg-playground/providers/Microsoft.ContainerService/managedClusters/aks-playground"
+}
+
+data "azurerm_kubernetes_cluster" "main" {
+  name                = "aks-playground"
+  resource_group_name = "rg-playground"
 }
 
 resource "tls_private_key" "backend" {
@@ -18,7 +23,7 @@ resource "github_repository_deploy_key" "backend" {
 
 resource "azurerm_kubernetes_cluster_extension" "main" {
   name           = "flux"
-  cluster_id     = local.cluster_id
+  cluster_id     = data.azurerm_kubernetes_cluster.main.id
   extension_type = "microsoft.flux"
 }
 
@@ -36,7 +41,7 @@ resource "github_repository_deploy_key" "k8s" {
 
 resource "azurerm_kubernetes_flux_configuration" "k8s" {
   name       = "flux-config"
-  cluster_id = local.cluster_id
+  cluster_id = data.azurerm_kubernetes_cluster.main.id
   namespace  = "flux-system"
   scope      = "cluster"
 
@@ -60,7 +65,7 @@ resource "azurerm_kubernetes_flux_configuration" "k8s" {
 
 resource "azurerm_kubernetes_flux_configuration" "backend" {
   name       = "backend"
-  cluster_id = local.cluster_id
+  cluster_id = data.azurerm_kubernetes_cluster.main.id
   namespace  = "backend"
 
   git_repository {
