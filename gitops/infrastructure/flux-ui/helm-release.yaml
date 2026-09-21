@@ -20,11 +20,11 @@ spec:
   chart:
     spec:
       chart: flux-operator
+      version: "0.60.0"
       sourceRef:
         kind: HelmRepository
         name: flux-operator
         namespace: flux-system
-        version: "0.60.0"
   install:
     createNamespace: false
     crds: Create
