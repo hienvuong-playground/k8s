@@ -24,7 +24,7 @@ spec:
         kind: HelmRepository
         name: flux-operator
         namespace: flux-system
-      # version: "x.y.z"   # pin a version if you want reproducible upgrades
+        version: "0.60.0"
   install:
     createNamespace: false
     crds: Create
