@@ -23,13 +23,13 @@ terraform {
   }
 
   backend "azurerm" {
-    # use_oidc             = true
+    use_oidc             = true # Has to be enable, otherwise it uses the credentials from az login when running github actions
     use_azuread_auth     = true
+    tenant_id            = "05d0fb8b-e674-421f-81e0-eb7737ff8128"
     client_id            = "80c9c7ba-bc37-4fc6-b21e-2fb660764ae6"
     storage_account_name = "stplaygroundinitk8s"
     key                  = "terraform.tfstate"
     container_name       = "tfstate"
-    tenant_id            = "05d0fb8b-e674-421f-81e0-eb7737ff8128"
   }
 }
 
