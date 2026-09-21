@@ -23,7 +23,7 @@ terraform {
   }
 
   backend "azurerm" {
-    use_oidc             = true
+    # use_oidc             = true
     use_azuread_auth     = true
     client_id            = "80c9c7ba-bc37-4fc6-b21e-2fb660764ae6"
     storage_account_name = "stplaygroundinitk8s"
