@@ -26,3 +26,19 @@ spec:
     remediation:
       retries: 3
       remediateLastFailure: true
+  values:
+    # Trimmed requests so KEDA fits on the single standard_d4als_v7 node.
+    # Scheduling keys on requests, not limits; limits left at chart defaults.
+    resources:
+      operator:
+        requests:
+          cpu: 50m
+          memory: 64Mi
+      metricServer:
+        requests:
+          cpu: 50m
+          memory: 64Mi
+      admissionWebhooks:
+        requests:
+          cpu: 25m
+          memory: 32Mi

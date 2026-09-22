@@ -29,6 +29,22 @@ spec:
       retries: 3
       remediateLastFailure: true
   values:
+    # Trimmed requests + single interceptor so the HTTP add-on fits alongside
+    # keda-core on the single node. Scheduling keys on requests, not limits.
     interceptor:
       replicas:
-        min: 2
+        min: 1
+      resources:
+        requests:
+          cpu: 50m
+          memory: 64Mi
+    scaler:
+      resources:
+        requests:
+          cpu: 25m
+          memory: 32Mi
+    operator:
+      resources:
+        requests:
+          cpu: 25m
+          memory: 32Mi
