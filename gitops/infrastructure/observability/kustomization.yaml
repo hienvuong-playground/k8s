@@ -5,6 +5,4 @@ resources:
   - namespace.yaml
   - prometheus-release.yaml
   - grafana-release.yaml
-  - otel-operator-release.yaml
-  - otel-collector.yaml
-  - instrumentation.yaml
+  - flux-kustomizations.yaml
