@@ -6,3 +6,4 @@ resources:
   - prometheus-release.yaml
   - grafana-release.yaml
   - flux-kustomizations.yaml
+  - network-policies.yaml
