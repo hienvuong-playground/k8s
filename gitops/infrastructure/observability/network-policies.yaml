@@ -3,7 +3,8 @@
 # grafana-egress:     default-deny egress on Grafana, allowing only DNS and
 #                     queries to the Prometheus datasource.
 # prometheus-ingress: default-deny ingress on Prometheus, allowing only Grafana
-#                     (datasource queries) and the OTEL Collector (remote-write).
+#                     (datasource queries), the OTEL Collector (remote-write),
+#                     and KEDA (ScaledObject metric queries).
 #
 # NOTE: Grafana reaches Prometheus via the Service on port 80, but Cilium
 # enforces on the destination *pod* port, which is 9090 (the prometheus-server
@@ -60,6 +61,15 @@ spec:
     - fromEndpoints:
         - matchLabels:
             app.kubernetes.io/name: otel-collector
+      toPorts:
+        - ports:
+            - port: "9090"
+              protocol: TCP
+    # KEDA operator scaler polling (Prometheus trigger for the backend ScaledObject)
+    - fromEndpoints:
+        - matchLabels:
+            k8s:io.kubernetes.pod.namespace: kube-system
+            app.kubernetes.io/name: keda-operator
       toPorts:
         - ports:
             - port: "9090"
