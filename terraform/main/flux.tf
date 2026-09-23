@@ -78,6 +78,7 @@ resource "azurerm_kubernetes_flux_configuration" "backend" {
   kustomizations {
     name = "backend"
     path = "./deploy"
+    garbage_collection_enabled = true
 
     post_build {
       substitute = {
