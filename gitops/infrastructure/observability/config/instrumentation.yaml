@@ -6,5 +6,9 @@ metadata:
 spec:
   exporter:
     endpoint: http://otel-collector.observability.svc.cluster.local:4317
+  env:
+    # SDK defaults to http/protobuf (port 4318); force gRPC to match the :4317 endpoint
+    - name: OTEL_EXPORTER_OTLP_PROTOCOL
+      value: grpc
   nodejs:
     image: ghcr.io/open-telemetry/opentelemetry-operator/autoinstrumentation-nodejs:0.78.0
