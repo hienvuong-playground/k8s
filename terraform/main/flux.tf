@@ -6,8 +6,8 @@ locals {
 }
 
 data "azurerm_kubernetes_cluster" "main" {
-  name                = "aks-playground"
-  resource_group_name = "rg-playground"
+  name                = "aks-${local.project_name}"
+  resource_group_name = "rg-${local.project_name}"
 }
 
 resource "tls_private_key" "backend" {
