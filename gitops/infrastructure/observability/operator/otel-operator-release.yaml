@@ -40,3 +40,11 @@ spec:
     manager:
       collectorImage:
         repository: otel/opentelemetry-collector-contrib
+      # Disable the operator's self-managed NetworkPolicy. When on, the operator
+      # writes an egress policy for its own pod that hardcodes the current API
+      # server IP. AKS rotates that IP on cluster stop/start, which locks the
+      # operator out of the API and causes CrashLoopBackOff (it then wrongly
+      # reports "OpenTelemetryCollector CRDs are not present"). Leaving this off
+      # keeps the operator reachable across control-plane IP rotations.
+      featureGatesMap:
+        operator.networkpolicy: false
