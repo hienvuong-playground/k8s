@@ -1,10 +1,3 @@
-locals {
-  # flux_namespace       = azurerm_kubernetes_flux_configuration.backend.namespace
-  # backend_namespace    = kubernetes_namespace_v1.backend.metadata[0].name
-  # service_account_name = kubernetes_service_account_v1.backend.metadata[0].name
-  # cluster_id = "/subscriptions/a5f932d9-c773-4a18-bba4-d37f82f974a3/resourceGroups/rg-playground/providers/Microsoft.ContainerService/managedClusters/aks-playground"
-}
-
 data "azurerm_kubernetes_cluster" "main" {
   name                = "aks-${local.project_name}"
   resource_group_name = "rg-${local.project_name}"
@@ -56,6 +49,12 @@ resource "azurerm_kubernetes_flux_configuration" "k8s" {
     name                       = "cluster"
     path                       = "./gitops/clusters"
     garbage_collection_enabled = true
+
+    post_build {
+      substitute = {
+        MI_KEDA = data.azurerm_user_assigned_identity.keda.client_id
+      }
+    }
   }
 
   depends_on = [
@@ -79,15 +78,6 @@ resource "azurerm_kubernetes_flux_configuration" "backend" {
     name = "backend"
     path = "./deploy"
     garbage_collection_enabled = true
-
-    post_build {
-      substitute = {
-        # target_namespace = local.backend_namespace
-        # id_keyvault      = azurerm_user_assigned_identity.backend.client_id
-        # keyvault_name    = azurerm_key_vault.main.name
-        # tenant_id        = data.azurerm_client_config.current.tenant_id
-      }
-    }
   }
 
   depends_on = [
