@@ -49,24 +49,16 @@ spec:
     matchLabels:
       app.kubernetes.io/name: prometheus
   ingress:
-    # Grafana datasource queries
+    # All allowed clients query the prometheus-server container port (9090/TCP).
+    # fromEndpoints is OR'd, so a source matching any selector is permitted.
     - fromEndpoints:
+        # Grafana datasource queries
         - matchLabels:
             app.kubernetes.io/name: grafana
-      toPorts:
-        - ports:
-            - port: "9090"
-              protocol: TCP
-    # OTEL Collector remote-write (/api/v1/write)
-    - fromEndpoints:
+        # OTEL Collector remote-write (/api/v1/write)
         - matchLabels:
             app.kubernetes.io/name: otel-collector
-      toPorts:
-        - ports:
-            - port: "9090"
-              protocol: TCP
-    # KEDA operator scaler polling (Prometheus trigger for the backend ScaledObject)
-    - fromEndpoints:
+        # KEDA operator scaler polling (Prometheus trigger for the backend ScaledObject)
         - matchLabels:
             k8s:io.kubernetes.pod.namespace: kube-system
             app.kubernetes.io/name: keda-operator
