@@ -74,7 +74,7 @@ resource "azurerm_kubernetes_flux_configuration" "backend" {
     garbage_collection_enabled = true
     post_build {
       substitute = {
-        MI_KEDA = data.azurerm_user_assigned_identity.keda_backend.client_id
+        ID_KEDA_BACKEND = data.azurerm_user_assigned_identity.keda_backend.client_id
       }
     }
   }
