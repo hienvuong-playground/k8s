@@ -49,12 +49,6 @@ resource "azurerm_kubernetes_flux_configuration" "k8s" {
     name                       = "cluster"
     path                       = "./gitops/clusters"
     garbage_collection_enabled = true
-
-    post_build {
-      substitute = {
-        MI_KEDA = data.azurerm_user_assigned_identity.keda.client_id
-      }
-    }
   }
 
   depends_on = [
@@ -78,6 +72,11 @@ resource "azurerm_kubernetes_flux_configuration" "backend" {
     name = "backend"
     path = "./deploy"
     garbage_collection_enabled = true
+    post_build {
+      substitute = {
+        MI_KEDA = data.azurerm_user_assigned_identity.keda_backend.client_id
+      }
+    }
   }
 
   depends_on = [

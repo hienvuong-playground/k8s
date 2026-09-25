@@ -1,5 +1,5 @@
-data "azurerm_user_assigned_identity" "keda" {
-  name                = "id-${local.project_name}-keda"
+data "azurerm_user_assigned_identity" "keda_backend" {
+  name                = "id-${local.project_name}-keda-backend"
   resource_group_name = "rg-${local.project_name}"
 }
 
@@ -11,6 +11,6 @@ resource "kubernetes_annotations" "keda_operator_sa" {
     namespace = "kube-system"
   }
   annotations = {
-    "azure.workload.identity/client-id" = data.azurerm_user_assigned_identity.keda.client_id
+    "azure.workload.identity/client-id" = data.azurerm_user_assigned_identity.keda_backend.client_id
   }
 }
